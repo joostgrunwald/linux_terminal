@@ -1,0 +1,26 @@
+COMMANDS
+The data structure contains a vector of strings called parts.
+We can fill it in a way that each part contains a part of a command, like it would if you wrote it out.
+This means that if I want to execute "tail -c 5" Command[0].parts[0] = "tail", while .parts[1] = "-c".
+If we combine the parts we can execute the structure with execvp, if we want to look at certain parts we can do that as well.
+So for cd for example we want to look at part[0] of the command and check if it is "cd" and then execute based on that.
+
+EXPRESSION
+The data structure contains a vector of commands, a string inputfromfile, a string outputfrile and a bool background.
+We can execute it by executing the commands in its vector of commands.
+For inputfromfile and outputtofile, we can check if they are .empty() to know if they are assigned.
+If one is assigned, we know that we can get the file from here and execute while piping to input or writing to output.
+For background, we know that if it is true, & marks are used and we can run the command in the background.
+
+SYSTEM FUNCTIONS
+We need Pipe() and Fork() for piping, we then use close() to close. Dub() for file handling.
+Other used system functions are adressed in our documentation.
+
+DOCUMENTATION
+When running the application, the main() runs, redirecting to shell() in shell.cpp.
+shell() just redirects to the normal() function. Which actually does something.
+normal() handles user input using the user input functions requestcommandline() and parsecommandline() after this it calls executeexpression().
+Executeexpression is a vip (very important function), it does all the hard work of executing (chained) commands by using a for loop to handle sub commands.
+Doing this in this manner makes | stackable. We also handle user input and output here by using conditions with handleIO, our IO function.
+For "normal" functions, we just pass commands and command parts to execvp, which executes those.
+For "special" functions, we added part conditions in executecommand, which call exit(0) to exit or chdir to pass command parts[0] to change directories and execute cd.
